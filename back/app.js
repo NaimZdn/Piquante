@@ -2,6 +2,8 @@ const express = require ('express');
 const app = express(); 
 const mongoose = require('mongoose'); 
 
+app.use(express.json());
+
 mongoose.connect('mongodb+srv://Namsco:PiquanteP6@cluster0.zfow9fn.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -15,9 +17,14 @@ app.use((req, res, next) => {
     next();
   });
 
+app.post('/api/auth/signup', (req, res)=> {
+    console.log(req.body)
+    res.json({message: 'Utilisateur enregistré'})
+});
+
+
 app.use((req, res) => {
     res.json({ message: 'votre requête a bien été reçue ! '});
-
 
 });
 
