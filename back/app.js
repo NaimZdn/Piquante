@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user-router')
 
-app.use(express.json());
+
 
 
 mongoose.connect('mongodb+srv://Namsco:PiquanteP6@cluster0.zfow9fn.mongodb.net/?retryWrites=true&w=majority',
@@ -19,9 +19,11 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
   });
+  
+app.use(express.json());
+
 
 app.use('/api/auth', userRoutes); 
-
 
 app.use((req, res) => {
     res.json({ message: 'votre requête a bien été reçue ! '});
