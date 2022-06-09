@@ -2,7 +2,10 @@ const express = require ('express');
 const app = express(); 
 const mongoose = require('mongoose'); 
 
+const userRoutes = require('./routes/user-router')
+
 app.use(express.json());
+
 
 mongoose.connect('mongodb+srv://Namsco:PiquanteP6@cluster0.zfow9fn.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -17,10 +20,7 @@ app.use((req, res, next) => {
     next();
   });
 
-app.post('/api/auth/signup', (req, res)=> {
-    console.log(req.body)
-    res.json({message: 'Utilisateur enregistré'})
-});
+app.use('/api/auth', userRoutes); 
 
 
 app.use((req, res) => {
