@@ -1,10 +1,11 @@
 const express = require ('express'); 
 const app = express(); 
 const mongoose = require('mongoose'); 
+const path = require('path')
+
 
 const userRoutes = require('./routes/user-router')
-
-
+const sauceRoutes = require('./routes/sauce-router')
 
 
 mongoose.connect('mongodb+srv://Namsco:PiquanteP6@cluster0.zfow9fn.mongodb.net/?retryWrites=true&w=majority',
@@ -23,10 +24,14 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 
+app.use ('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/auth', userRoutes); 
+app.use('/api/sauces', sauceRoutes);
+
 
 app.use((req, res) => {
-    res.json({ message: 'votre requête a bien été reçue ! '});
+  res.json({ message: 'votre requête a bien été reçue ! '});
 
 });
 
