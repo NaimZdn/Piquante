@@ -6,18 +6,11 @@ const multer = require('../middlewares/multer-config');
 
 const sauceCtrl = require('../controllers/sauce-controller');
 
-router.get('/', sauceCtrl.getAllSauces);
-router.get('/:id', sauceCtrl.getOneSauce);
-router.post('/', multer, sauceCtrl.createNewSauce);
-router.put('/:id', multer, sauceCtrl.updateSauce);
-
-/*
-
-router.delete('/api/sauces/:id', (req, res, next ) => {
-    sauce.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
-    .catch(error => res.status(400).json({ error }));
-});*/
+router.get('/', auth, sauceCtrl.getAllSauces);
+router.get('/:id', auth, sauceCtrl.getOneSauce);
+router.post('/', auth, multer, sauceCtrl.createNewSauce);
+router.put('/:id', auth, multer, sauceCtrl.updateSauce);
+router.delete('/:id', auth, multer, sauceCtrl.deleteSauce);
 
 
 module.exports = router; 
