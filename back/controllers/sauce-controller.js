@@ -46,13 +46,48 @@ exports.deleteSauce = (req, res, next ) => {
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json ({ message: 'La sauce a bien été supprimée '}))
+                    .then(() => res.status(200).json ({ message: 'La sauce a bien été supprimée ! '}))
                     .catch(error => res.status(400).json({error}));
             });
         })
         .catch(error => res.status(500).json({ error }));
 };
 
-
-
+exports.likeAndDislikeSauce = (req, res, next ) => {
+    const { like, userId } = req.body
+    let sauceId = req.params.id
+    
+    switch (like) {
+      case 1 :
+          sauce.updateOne({ _id: sauceId }, { $push: { usersLiked: userId }, $inc: { likes: +1 }})
+            .then(() => res.status(200).json({ message: 'Votre like a bien été ajouté' }))
+            .catch((error) => res.status(400).json({ error }))
+            
+        break;
+  
+      case 0 :
+          sauce.findOne({ _id: sauceId })
+             .then((sauceArg) => {
+              if (sauceArg.usersLiked.includes(userId)) { 
+                sauce.updateOne({ _id: sauceId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 }})
+                  .then(() => res.status(200).json({ message: 'Votre like a bien été retiré' }))
+                  .catch((error) => res.status(400).json({ error }))
+              }
+              if (sauceArg.usersDisliked.includes(userId)) { 
+                sauce.updateOne({ _id: sauceId }, { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 }})
+                .then(() => res.status(200).json({ message: 'Votre dislike a bien été retiré' }))
+                .catch((error) => res.status(400).json({ error }))
+              }
+            })
+            .catch((error) => res.status(404).json({ error }))
+        break;
+  
+      case -1 :
+          sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 }})
+            .then(() => { res.status(200).json({ message: 'Votre dislike a bien été ajouté' }) })
+            .catch((error) => res.status(400).json({ error }))
+        break;
+    }
+    
+};
 
