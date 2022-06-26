@@ -1,4 +1,5 @@
 const webToken = require ('jsonwebtoken');
+const sauce = require('../models/sauces-model')
 
 module.exports = (req, res, next) => {
     try {
@@ -10,6 +11,7 @@ module.exports = (req, res, next) => {
         } else {
             next();
         }
+        
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée ! '});
     }
