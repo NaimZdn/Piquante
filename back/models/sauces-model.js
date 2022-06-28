@@ -1,5 +1,7 @@
+// Utilisation de mongoose créer un shéma de sauce et l'exporter sous forme de modèle afin de le réutiliser 
 const mongoose = require('mongoose');
 
+// Création du shéma des sauces, on oblige l'utilisateur à renseigner certaines informations.
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
   name: { type: String, required: true },
@@ -14,4 +16,5 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String] }
 });
 
+// On exporte le shéma des sauces sous forme de modèle sous le nom de 'sauce' 
 module.exports = mongoose.model('sauce', sauceSchema);
