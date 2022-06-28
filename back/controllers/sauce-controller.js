@@ -1,9 +1,6 @@
 const sauce = require('../models/sauces-model');
 const fs = require('fs')
 
-// Création de regex pour eviter les attaque par injections
-const regexForInputs = /^[a-zA-Z0-9 _.,!()&éêèàçùîï]+$/
-
 // On affiche toutes les sauces selon leur modèle
 exports.getAllSauces = (req, res, next) => {
     sauce.find()
@@ -22,16 +19,6 @@ exports.createNewSauce = (req, res, next) => {
     // On récupère les données du modèle de la sauce en format JSON 
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
-    // On vérifie la validité des inputs avec la regex que l'on a precedemment renseignée
-    if(
-        !regexForInputs.test(sauceObject.name)|| 
-        !regexForInputs.test(sauceObject.manufacturer)||
-        !regexForInputs.test(sauceObject.description)||
-        !regexForInputs.test(sauceObject.mainPepper)||
-        !regexForInputs.test(sauceObject.hear)){
-          return res.status(401).json({message : "Veuillez entrer des caractères valides ! "})
-        };
-
     const newSauce = new sauce({
         // On utilise le modèle précèdement crée en lui ajoutant les paramètre qui n'ont pas été requis lors de la création de la sauce 
         ...sauceObject,
@@ -65,20 +52,12 @@ exports.updateSauce = (req, res, next) => {
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         } : { ...req.body };
 
-        if(
-            !regexForInputs.test(sauceObject.name)|| 
-            !regexForInputs.test(sauceObject.manufacturer)||
-            !regexForInputs.test(sauceObject.description)||
-            !regexForInputs.test(sauceObject.mainPepper)||
-            !regexForInputs.test(sauceObject.hear)){
-              return res.status(401).json({message : "Veuillez entrer des caractères valides ! "})
-            };
-
     delete sauceObject.userId
     sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'La sauce a bien été modifiée!' }))
         .catch(error => res.status(400).json({ error }));
 };
+
 
 // Création du contrôleur permettant à l'utilisateur de supprimer une sauce 
 exports.deleteSauce = (req, res, next) => {
